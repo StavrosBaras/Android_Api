@@ -1,7 +1,6 @@
 package gr.uom.api_app;
 
 import android.content.Intent;
-import android.content.SearchRecentSuggestionsProvider;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 public class PostsActivity extends AppCompatActivity {
@@ -29,6 +30,7 @@ public class PostsActivity extends AppCompatActivity {
     private String hashtag;
     private String instaId;
     private ListView postListView;
+    private MainActivity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +45,12 @@ public class PostsActivity extends AppCompatActivity {
         accessToken = AccessToken.getCurrentAccessToken();
         hashtagId = intent.getStringExtra("hashtagId");
         instaId = intent.getStringExtra("instaId");
+        ContextClass context = (ContextClass)intent.getParcelableExtra("context");
+        mainActivity = (MainActivity) context.getContext();
 
         getInstaPosts();
+
+
 
         postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -53,12 +59,7 @@ public class PostsActivity extends AppCompatActivity {
             }
         });
 
-        for(Post post : posts){
-            Log.d("Stavros", "-------- " + post.getMediaString() + "  " + post.getBody());
-        }
 
-        //searchPostsTask searchPostsTask = new searchPostsTask(hashtag);
-        //searchPostsTask.execute();
 
         /*try {
             posts = searchPostsTask.get();
@@ -97,10 +98,20 @@ public class PostsActivity extends AppCompatActivity {
                                 posts.add(new Post(id, body, mediaString, comments_count, likes_count, "instagram"));
                             }
 
+                            SearchTwitterPostsTask searchTwitterPostsTask = new SearchTwitterPostsTask(mainActivity,hashtag);
+                            searchTwitterPostsTask.execute();
+                            posts.addAll(searchTwitterPostsTask.get());
+
+                            Collections.shuffle(posts);
+
                             PostAdapter postAdapter = new PostAdapter(PostsActivity.this,posts);
                             postListView.setAdapter(postAdapter);
 
                         } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
                             e.printStackTrace();
                         }
 

@@ -42,10 +42,8 @@ public class PostAdapter extends ArrayAdapter {
         String url = currentPost.getMediaString();
         if(!url.equals("") && currentPost.getType().equals("twitter")) {
             url = addChar(url,'s',4);
-            Log.d("stavros","Url is --- " + url +"");
             Picasso.get().load(url).error(R.drawable.ball_100x100).into(image);
         }else if(currentPost.getType().equals("instagram" ) && !url.equals("")){
-            Log.d("stavros","Url is --- " + url +"");
             Picasso.get().load(url).error(R.drawable.ball_100x100).into(image);
         }else{
             image.setImageResource(0);

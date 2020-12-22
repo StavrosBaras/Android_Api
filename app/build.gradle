@@ -31,8 +31,10 @@ dependencies {
     implementation 'com.facebook.android:facebook-share:5.15.3'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
     implementation 'org.twitter4j:twitter4j-core:4.0.7'
+    implementation 'org.twitter4j:twitter4j-async:4.0.7'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

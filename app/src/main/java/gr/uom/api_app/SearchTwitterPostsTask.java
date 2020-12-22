@@ -13,12 +13,14 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class searchPostsTask extends AsyncTask<Void, Void, ArrayList<Post>> {
+public class SearchTwitterPostsTask extends AsyncTask<Void, Void, ArrayList<Post>> {
 
     String hashtag;
+    MainActivity mainActivity;
     ArrayList<Post> posts;
 
-    public searchPostsTask(String hashtag) {
+    public SearchTwitterPostsTask(MainActivity mainActivity, String hashtag) {
+        this.mainActivity = mainActivity;
         this.hashtag = hashtag;
     }
 
@@ -26,10 +28,10 @@ public class searchPostsTask extends AsyncTask<Void, Void, ArrayList<Post>> {
     protected ArrayList<Post> doInBackground(Void... voids) {
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
-                .setOAuthConsumerKey("1MVfEPpnoW7F81XTHU404jTLQ")
-                .setOAuthConsumerSecret("HDVg5VkwPeeNU57DiNe63dGPxbrToHL6UrTpFQy3nElEWBbVcT")
-                .setOAuthAccessToken("1318238160674037763-rG0cPs2zsBvBGXv3zz5yySEzq8STyD")
-                .setOAuthAccessTokenSecret("cC0ULX7naVP0eplmQqBWzvUJG1rOdYsN5M4MI0fkOr0Wo");
+                .setOAuthConsumerKey((MainActivity.getInstance().getString(R.string.CONSUMER_KEY)))
+                .setOAuthConsumerSecret(MainActivity.getInstance().getString(R.string.CONSUMER_SECRET))
+                .setOAuthAccessToken(MainActivity.getInstance().getString(R.string.ACCESS_TOKEN))
+                .setOAuthAccessTokenSecret((MainActivity.getInstance().getString(R.string.ACCESS_TOKEN_SECRET)));
 
         TwitterFactory twitterFactory = new TwitterFactory(cb.build());
         Twitter twitter = twitterFactory.getInstance();
@@ -43,11 +45,14 @@ public class searchPostsTask extends AsyncTask<Void, Void, ArrayList<Post>> {
             long id;
             String body="";
             String mediaURL="";
+            int like_count,comment_count;
 
             for(twitter4j.Status status : result.getTweets()){
                 id = status.getId();
                 body = status.getText();
                 mediaURL= "";
+                like_count = status.getFavoriteCount();
+                comment_count = status.getRetweetCount();
                 for (MediaEntity mediaEntity : status.getMediaEntities()) {
                    //if (mediaEntity.getType().equals("photo"))
                        mediaURL = mediaEntity.getMediaURL();
@@ -55,7 +60,7 @@ public class searchPostsTask extends AsyncTask<Void, Void, ArrayList<Post>> {
                 }
                 Log.d("stavros","Post Text: " + status.getText() + "\n\n" );
                 Log.d("stavros","Media url: " + mediaURL );
-                posts.add(new Post(id,body,mediaURL));
+                posts.add(new Post(id,body,mediaURL,comment_count,like_count,"twitter"));
             }
 
         } catch (TwitterException e) {
