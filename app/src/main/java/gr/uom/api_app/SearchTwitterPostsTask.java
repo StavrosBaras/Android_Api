@@ -3,7 +3,10 @@ package gr.uom.api_app;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import twitter4j.MediaEntity;
 import twitter4j.Query;
@@ -45,11 +48,20 @@ public class SearchTwitterPostsTask extends AsyncTask<Void, Void, ArrayList<Post
             long id;
             String body="";
             String mediaURL="";
+            String screeName="";
+            String name="";
+            String dateString="";
+            Date date;
             int like_count,comment_count;
 
             for(twitter4j.Status status : result.getTweets()){
                 id = status.getId();
                 body = status.getText();
+                screeName = status.getUser().getScreenName();
+                name = status.getUser().getName();
+                date = status.getCreatedAt();
+                DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                dateString = df.format(date);
                 mediaURL= "";
                 like_count = status.getFavoriteCount();
                 comment_count = status.getRetweetCount();
@@ -60,7 +72,7 @@ public class SearchTwitterPostsTask extends AsyncTask<Void, Void, ArrayList<Post
                 }
                 Log.d("stavros","Post Text: " + status.getText() + "\n\n" );
                 Log.d("stavros","Media url: " + mediaURL );
-                posts.add(new Post(id,body,mediaURL,comment_count,like_count,"twitter"));
+                posts.add(new Post(id,body,mediaURL,comment_count,like_count,name,screeName,dateString,"twitter"));
             }
 
         } catch (TwitterException e) {

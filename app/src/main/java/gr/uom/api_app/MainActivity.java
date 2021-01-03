@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
     private Switch imgSwitch,fbSwitch,instaSwitch,twitterSwitch;
     private ImageView imageView;
     private ArrayAdapter<String> hashtagsAdapter;
-    private Bitmap bitmapImg;
 
     private ShareDialog shareDialog;
     private CallbackManager callbackManager;
@@ -190,44 +189,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
             }
-
-                        /*Text Post
-                        GraphRequest request = null;
-                        try {
-                            request = GraphRequest.newPostRequest(
-                                    accessToken,
-                                    "/"+ TestSiteID + "/feed",
-                                    new JSONObject("{\"message\":\"Awesome!!!!\"}"),
-                                    new GraphRequest.Callback() {
-                                        @Override
-                                        public void onCompleted(GraphResponse response) {
-                                            Toast.makeText(MainActivity.this,"Post Succeded", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        request.executeAsync();*/
-
-                       /* Img post
-                        GraphRequest request = null;
-                        try {
-                            request = GraphRequest.newPostRequest(
-                                    accessToken,
-                                    "/" + TestSiteID + "/photos",
-                                    new JSONObject("{\"url\":\"http://i.imgur.com/DvpvklR.png\",\"message\":\"HELLO THERE\"}"),
-                                    new GraphRequest.Callback() {
-                                        @Override
-                                        public void onCompleted(GraphResponse response) {
-                                            Toast.makeText(MainActivity.this,"Image uploaded...", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        request.executeAsync();
-                    }
-                });*/
 
                 @Override
                 public void onCancel() {
@@ -388,51 +349,6 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("instaId",instaId);
         intent.putExtra("context", new ContextClass(this));
         startActivity(intent);
-
-        /*GraphRequest request = GraphRequest.newGraphPathRequest(
-                accessToken,
-                "/" + hashtagId + "/top_media",
-                new GraphRequest.Callback() {
-                    @Override
-                    public void onCompleted(GraphResponse response) {
-
-                        try {
-                            JSONArray jsonArray = new JSONArray(response.getJSONObject().getString("data"));
-
-                            for (int i=0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                //Log.d("Stavros", "id is : " + jsonObject.getString("id") + " media url is : " + jsonObject.getString("media_url") +
-                                        //" caption is : " + jsonObject.getString("caption"));
-
-                                long id = Long.parseLong(jsonObject.getString("id"));
-                                String media_type = jsonObject.getString("media_type");
-                                String mediaString = "";
-                                if(media_type.equals("IMAGE")) {
-                                    mediaString = jsonObject.getString("media_url");
-                                }
-                                String body = jsonObject.getString("caption");
-                                int comments_count = Integer.parseInt(jsonObject.getString("comments_count"));
-                                int likes_count = Integer.parseInt(jsonObject.getString("like_count"));
-
-                                posts.add(new Post(id,body,mediaString,comments_count,likes_count,"instagram"));
-
-                                /*for(Post post : posts){
-                                    Log.d("Stavros", "-------- " + mediaString + "  " + body);
-                                }
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
-
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,media_type,comments_count,like_count,media_url,caption");
-        parameters.putString("user_id", instaId);
-        request.setParameters(parameters);
-        request.executeAsync();*/
     }
 
     private void getCredentials() {
@@ -525,15 +441,14 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                byte[] data = null;
-
                 Bitmap bi = BitmapFactory.decodeFile(imgPath);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bi.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                data = baos.toByteArray();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bi.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] data = stream.toByteArray();
 
                 Bundle parameters = new Bundle();
                 parameters.putByteArray("source", data);
+                request.setParameters(parameters);
                 request.executeAsync();
 
                 //Picasso.get().load(new File(imgPath)).into(target);
@@ -568,13 +483,12 @@ public class MainActivity extends AppCompatActivity {
             if(imgSwitch.isChecked()){
                 PostTweetTask postTweetTask = new PostTweetTask(this,text,imgPath);
                 postTweetTask.execute();
-                Toast.makeText(MainActivity.this, "Twitter post succeeded", Toast.LENGTH_SHORT).show();
             }else{
                 AsyncTwitterFactory factory = new AsyncTwitterFactory(cb.build());
                 AsyncTwitter asyncTwitter = factory.getInstance();
                 asyncTwitter.updateStatus(text);
-                Toast.makeText(MainActivity.this, "Twitter post succeeded", Toast.LENGTH_SHORT).show();
             }
+            Toast.makeText(MainActivity.this, "Twitter post succeeded", Toast.LENGTH_SHORT).show();
         }
 
     }

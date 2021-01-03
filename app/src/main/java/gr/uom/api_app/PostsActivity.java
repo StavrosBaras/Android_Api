@@ -50,16 +50,16 @@ public class PostsActivity extends AppCompatActivity {
 
         getInstaPosts();
 
-
-
         postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Stavros", posts.get(position).getMediaString() + " ID : " + posts.get(position).getId() + " text : " + posts.get(position).getBody());
+                Log.d("Stavros", posts.get(position).getMediaString() + " ID : " + posts.get(position).getId() + " text : " + posts.get(position).getBody() + " name : " +
+                        posts.get(position).getName() + " screenName : @" + posts.get(position).getScreenName() + " date : " + posts.get(position).getDate());
+                Intent intent = new Intent(PostsActivity.this, DetailsActivity.class);
+                intent.putExtra("post", posts.get(position));
+                startActivity(intent);
             }
         });
-
-
 
         /*try {
             posts = searchPostsTask.get();
@@ -72,7 +72,7 @@ public class PostsActivity extends AppCompatActivity {
     }
 
     private void getInstaPosts() {
-        GraphRequest request = GraphRequest.newGraphPathRequest(
+        final GraphRequest request = GraphRequest.newGraphPathRequest(
                 accessToken,
                 "/" + hashtagId + "/top_media",
                 new GraphRequest.Callback() {
@@ -94,8 +94,9 @@ public class PostsActivity extends AppCompatActivity {
                                 String body = jsonObject.getString("caption");
                                 int comments_count = Integer.parseInt(jsonObject.getString("comments_count"));
                                 int likes_count = Integer.parseInt(jsonObject.getString("like_count"));
+                                String date = jsonObject.getString("timestamp");
 
-                                posts.add(new Post(id, body, mediaString, comments_count, likes_count, "instagram"));
+                                posts.add(new Post(id, body, mediaString, comments_count, likes_count,"","",date, "instagram"));
                             }
 
                             SearchTwitterPostsTask searchTwitterPostsTask = new SearchTwitterPostsTask(mainActivity,hashtag);
@@ -119,7 +120,7 @@ public class PostsActivity extends AppCompatActivity {
                 });
 
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,media_type,comments_count,like_count,media_url,caption");
+        parameters.putString("fields", "id,media_type,comments_count,like_count,media_url,caption,timestamp");
         parameters.putString("user_id", instaId);
         request.setParameters(parameters);
         request.executeAsync();
