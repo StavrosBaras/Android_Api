@@ -1,5 +1,6 @@
 package gr.uom.api_app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -76,32 +77,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Post> posts;
     private static MainActivity mainActivity;
     private Bitmap mBitmap;
-
-    Target target = new Target() {
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            SharePhoto sharePhoto = new SharePhoto.Builder()
-                    .setBitmap(bitmap)
-                    .build();
-
-            if(ShareDialog.canShow(SharePhotoContent.class)){
-                SharePhotoContent content = new SharePhotoContent.Builder()
-                        .addPhoto(sharePhoto)
-                        .build();
-                shareDialog.show(content);
-            }
-        }
-
-        @Override
-        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-        }
-
-        @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,7 +182,44 @@ public class MainActivity extends AppCompatActivity {
         if(fbSwitch.isChecked()) {
             if (imgSwitch.isChecked()) {
 
+                // Create the new Intent using the 'Send' action.
+                Intent share = new Intent(Intent.ACTION_SEND);
+
+                // Set the MIME type
+                share.setType("image/*");
+
+                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                StrictMode.setVmPolicy(builder.build());
+
+                // Create the URI from the media
+                File media = new File(imgPath);
+                Uri uri = Uri.fromFile(media);
+
+                // Add the URI to the Intent.
+                share.putExtra(Intent.EXTRA_STREAM, uri);
+                share.putExtra(Intent.EXTRA_TEXT,postText.getText());
+                share.setPackage("com.facebook.katana");
+
+                // Broadcast the Intent.
+                startActivity(Intent.createChooser(share, "Share to fb"));
+
             } else{
+
+                // Create the new Intent using the 'Send' action.
+                Intent share = new Intent(Intent.ACTION_SEND);
+
+                // Set the MIME type
+                //share.setType("text/plain");
+
+                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                StrictMode.setVmPolicy(builder.build());
+
+                share.setPackage("com.facebook.katana");
+
+                share.putExtra(Intent.EXTRA_TEXT,postText.getText());
+
+                // Broadcast the Intent.
+                startActivity(Intent.createChooser(share, "Share to fb"));
 
             }
         }
@@ -217,9 +229,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(twitterSwitch.isChecked()){
-            if(imgSwitch.isChecked()){
+            if (imgSwitch.isChecked()) {
 
-            }else{
+                // Create the new Intent using the 'Send' action.
+                Intent share = new Intent(Intent.ACTION_SEND);
+
+                // Set the MIME type
+                share.setType("image/*");
+
+                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                StrictMode.setVmPolicy(builder.build());
+
+                // Create the URI from the media
+                File media = new File(imgPath);
+                Uri uri = Uri.fromFile(media);
+
+                // Add the URI to the Intent.
+                share.putExtra(Intent.EXTRA_STREAM, uri);
+                share.putExtra(Intent.EXTRA_TEXT,postText.getText());
+                share.setPackage("com.twitter.android");
+
+                // Broadcast the Intent.
+                startActivity(Intent.createChooser(share, "Share to twitter"));
 
             }
         }
