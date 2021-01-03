@@ -1,12 +1,10 @@
 package gr.uom.api_app;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -33,11 +31,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -199,24 +193,6 @@ public class MainActivity extends AppCompatActivity {
                 share.putExtra(Intent.EXTRA_STREAM, uri);
                 share.putExtra(Intent.EXTRA_TEXT,postText.getText());
                 share.setPackage("com.facebook.katana");
-
-                // Broadcast the Intent.
-                startActivity(Intent.createChooser(share, "Share to fb"));
-
-            } else{
-
-                // Create the new Intent using the 'Send' action.
-                Intent share = new Intent(Intent.ACTION_SEND);
-
-                // Set the MIME type
-                //share.setType("text/plain");
-
-                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                StrictMode.setVmPolicy(builder.build());
-
-                share.setPackage("com.facebook.katana");
-
-                share.putExtra(Intent.EXTRA_TEXT,postText.getText());
 
                 // Broadcast the Intent.
                 startActivity(Intent.createChooser(share, "Share to fb"));
@@ -465,7 +441,7 @@ public class MainActivity extends AppCompatActivity {
                             new GraphRequest.Callback() {
                                 @Override
                                 public void onCompleted(GraphResponse response) {
-                                    Toast.makeText(MainActivity.this, "Post Succeeded", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "Facebook post Succeeded", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 } catch (JSONException e) {

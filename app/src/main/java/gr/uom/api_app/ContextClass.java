@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 public class ContextClass implements Parcelable {
 
     Context context;
