@@ -375,9 +375,10 @@ public class MainActivity extends AppCompatActivity {
                             testSiteAccessToken = new AccessToken(testSiteAccessTokenString,
                                     accessToken.getApplicationId(),
                                     accessToken.getUserId(),
-                                    null, null, null, null, null, null, null);
+                                    null, null, null, null,
+                                    null, null, null);
 
-                            Log.d("Stavros", "TEST SITE ID IS: " + testSiteID + "AND THE ACCESS TOKEN IS: " + testSiteAccessTokenString);
+                            Log.d("Stavros", "TEST SITE ID IS: " + testSiteID + "AND THE ACCESSS TOKEN IS: " + testSiteAccessTokenString);
                             Toast.makeText(MainActivity.this, "Got facebook data...", Toast.LENGTH_SHORT).show();
 
                             getInstaId();

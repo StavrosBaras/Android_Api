@@ -2,4 +2,8 @@
     <string name="app_name">API_APP</string>
     <string name="facebook_app_id">837631610341071</string>
     <string name="fb_login_protocol_scheme">fb837631610341071</string>
+    <string name="CONSUMER_KEY">1MVfEPpnoW7F81XTHU404jTLQ</string>
+    <string name="CONSUMER_SECRET">HDVg5VkwPeeNU57DiNe63dGPxbrToHL6UrTpFQy3nElEWBbVcT</string>
+    <string name="ACCESS_TOKEN">1318238160674037763-rG0cPs2zsBvBGXv3zz5yySEzq8STyD</string>
+    <string name="ACCESS_TOKEN_SECRET">cC0ULX7naVP0eplmQqBWzvUJG1rOdYsN5M4MI0fkOr0Wo</string>
 </resources>
